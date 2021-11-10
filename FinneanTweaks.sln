@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinneanTweaks", "FinneanTweaks.csproj", "{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Install|Any CPU = Debug Install|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Debug Install|Any CPU.ActiveCfg = Debug Install|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Debug Install|Any CPU.Build.0 = Debug Install|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35B9D57C-6A0A-438D-AE8E-1CAF9E6D2314}
+	EndGlobalSection
+EndGlobal

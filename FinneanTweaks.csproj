@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props" Condition="Exists('..\packages\Aze.Publicise.MSBuild.Task.1.0.0\build\Aze.Publicise.MSBuild.Task.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <InstallDir Condition=" '$(InstallDir)' == '' ">$(WrathPath)</InstallDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <Target Name="Publicise" AfterTargets="Clean">
+    <ItemGroup>
+      <PubliciseInputAssemblies Include="$(InstallDir)\Wrath_Data\Managed\Assembly-CSharp.dll" />
+    </ItemGroup>
+    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
+  </Target>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FinneanTweaks</RootNamespace>
+    <AssemblyName>FinneanTweaks</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Deterministic>false</Deterministic>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\FinneanTweaks\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Install|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(WrathPath)Mods\FinneanTweaks\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Deterministic>false</Deterministic>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="BubblesSaveHooker.cs" />
+    <Compile Include="EnchantmentHandler.cs" />
+    <Compile Include="FinneanUIInjector.cs" />
+    <Compile Include="Main.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp_public">
+      <HintPath>lib\Assembly-CSharp_public.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Microsoft.Build.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.Core">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.UI">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.UniRx">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.UniRx.dll</HintPath>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.Visual">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityModManager">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\UnityModManager\UnityModManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo "$(TargetPath)" "&gt;$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).dll*"
+xcopy /Y "$(TargetPath)" "$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).dll*"
+xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(WrathPath)\Mods\$(ProjectName)\$(ProjectName).pdb*"
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
