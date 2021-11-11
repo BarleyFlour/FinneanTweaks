@@ -45,44 +45,61 @@ using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Items;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 
 namespace FinneanTweaks
 {
 #if DEBUG
-	[EnableReloading]
+    [EnableReloading]
 #endif
-	public class Main
-	{
-		public static UnityModManager.ModEntry ModEntry;
-		public static bool IsEnabled = false;
-		public static UnityModManager.ModEntry.ModLogger logger;
-		static bool Load(UnityModManager.ModEntry modEntry)
-		{
-			try
-			{
-				ModEntry = modEntry;
-				logger = modEntry.Logger;
-				var harmony = new Harmony(modEntry.Info.Id);
-				harmony.PatchAll();
-				modEntry.OnUnload = Unload;
-				modEntry.OnToggle = OnToggle;
-				IsEnabled = ModEntry.Enabled;
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-			return true;
-		}
-		static bool OnToggle(UnityModManager.ModEntry modEntry, bool value /* active or inactive */)
-		{
-			IsEnabled = value;
-			return true; // Permit or not.
-		}
-		static bool Unload(UnityModManager.ModEntry modEntry)
-		{
-			new Harmony(modEntry.Info.Id).UnpatchAll(modEntry.Info.Id);
-			return true;
-		}
-	}
+    public class Main
+    {
+        public static UnityModManager.ModEntry ModEntry;
+        public static bool IsEnabled = false;
+        public static UnityModManager.ModEntry.ModLogger logger;
+        static bool Load(UnityModManager.ModEntry modEntry)
+        {
+            try
+            {
+                ModEntry = modEntry;
+                logger = modEntry.Logger;
+                var harmony = new Harmony(modEntry.Info.Id);
+                harmony.PatchAll();
+#if DEBUG
+                modEntry.OnGUI = OnGui;
+#endif
+                modEntry.OnUnload = Unload;
+                modEntry.OnToggle = OnToggle;
+                IsEnabled = ModEntry.Enabled;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return true;
+        }
+        static bool OnToggle(UnityModManager.ModEntry modEntry, bool value /* active or inactive */)
+        {
+            IsEnabled = value;
+            return true; // Permit or not.
+        }
+        static bool Unload(UnityModManager.ModEntry modEntry)
+        {
+            new Harmony(modEntry.Info.Id).UnpatchAll(modEntry.Info.Id);
+            return true;
+        }
+#if DEBUG
+        static void OnGui(ModEntry modentry)
+        {
+            if(GUILayout.Button("Generate Enchant List"))
+            {
+                foreach(var enchantbp in Utilities.GetAllBlueprints().Entries.Where(b => b.Type == typeof(BlueprintWeaponEnchantment)).Select(a => ResourcesLibrary.TryGetBlueprint<BlueprintItemEnchantment>(a.Guid)))
+                {
+                    if(enchantbp.Description.Length > 0)
+                    Main.logger.Log("m_EnchantsÄ[\""+enchantbp.Name+"\"] = \""+ enchantbp.AssetGuidThreadSafe+ "\";");
+                }
+            }
+        }
+#endif
+    }
 }
