@@ -4,7 +4,7 @@ FEATURES
 
 • Tweaks finnean's progression so that he scales according to chapter instead of quests, i.e in Chapter 1 he's +1, Chapter 2 he's +2, etc.
 
-• Allows you to choose enchants, a lower tier one from the start and a higher tier one at the start of Chapter 4 (He retains Cold Iron and Ghost Touch regardless of enchant picks)
+• Allows you to choose enchants, a lower tier one from the start of chapter 2 & a higher tier one at the start of Chapter 4 (He retains Cold Iron and Ghost Touch regardless of enchant picks)
 
 SOURCE https://github.com/BarleyFlour/FinneanTweaks
 
