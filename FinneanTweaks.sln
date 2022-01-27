@@ -10,6 +10,8 @@ Global
 		Debug Install|Any CPU = Debug Install|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		UMM|Any CPU = UMM|Any CPU
+		WrathMod|Any CPU = WrathMod|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Debug Install|Any CPU.ActiveCfg = Debug Install|Any CPU
@@ -18,6 +20,10 @@ Global
 		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.UMM|Any CPU.ActiveCfg = UMM|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.UMM|Any CPU.Build.0 = UMM|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.WrathMod|Any CPU.ActiveCfg = WrathMod|Any CPU
+		{3724AF9A-1765-4FBD-B4BF-1C7A89CF2510}.WrathMod|Any CPU.Build.0 = WrathMod|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

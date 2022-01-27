@@ -1,41 +1,30 @@
-﻿using FinneanTweaks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Kingmaker;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Class.LevelUp;
-using Kingmaker.UnitLogic.Class.LevelUp.Actions;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FinneanTweaks
 {
     [HarmonyPatch]
-    static class SaveHooker
+    internal static class SaveHooker
     {
-
         [HarmonyPatch(typeof(ZipSaver))]
         [HarmonyPatch("SaveJson"), HarmonyPostfix]
-        static void Zip_Saver(string name, ZipSaver __instance)
+        private static void Zip_Saver(string name, ZipSaver __instance)
         {
             DoSave(name, __instance);
         }
 
         [HarmonyPatch(typeof(FolderSaver))]
         [HarmonyPatch("SaveJson"), HarmonyPostfix]
-        static void Folder_Saver(string name, FolderSaver __instance)
+        private static void Folder_Saver(string name, FolderSaver __instance)
         {
             DoSave(name, __instance);
         }
 
-        static void DoSave(string name, ISaver saver)
+        private static void DoSave(string name, ISaver saver)
         {
             if (name != "header")
                 return;
@@ -57,12 +46,12 @@ namespace FinneanTweaks
     }
 
     [HarmonyPatch(typeof(Game))]
-    static class LoadHooker
+    internal static class LoadHooker
     {
         public const string FileName = "header.json.barley_finneansettings";
 
         [HarmonyPatch("LoadGame"), HarmonyPostfix]
-        static void LoadGame(SaveInfo saveInfo)
+        private static void LoadGame(SaveInfo saveInfo)
         {
             try
             {
@@ -92,12 +81,13 @@ namespace FinneanTweaks
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Main.logger.Error(e.ToString());
             }
         }
     }
+
     public class FinneanSettings
     {
         public static FinneanSettings Instance = new FinneanSettings();

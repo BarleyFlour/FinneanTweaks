@@ -1,63 +1,58 @@
 ﻿using HarmonyLib;
-using Kingmaker;
-using Kingmaker.AreaLogic.Etudes;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.Root;
-using Kingmaker.Cheats;
-using Kingmaker.Designers.Mechanics.Facts;
-using Kingmaker.ElementsSystem;
-using Kingmaker.EntitySystem;
-using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.Enums;
-using Kingmaker.Enums.Damage;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UI.Common;
-using Kingmaker.UI.MVVM._VM.ServiceWindows.Spellbook.Metamagic;
-using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Class.LevelUp.Actions;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Groups;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Parts;
-using Kingmaker.Utility;
-using Kingmaker.View;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Kingmaker.UI;
-using Kingmaker.UI.MVVM._PCView.InGame;
-using UnityEngine;
 using UnityModManagerNet;
+using Kingmaker.Modding;
+using System.Reflection;
+#if UMM
 using static UnityModManagerNet.UnityModManager;
-using Kingmaker.UnitLogic.ActivatableAbilities;
-using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Items;
-using Kingmaker.Blueprints.Items.Ecnchantments;
-
+#endif
 namespace FinneanTweaks
 {
 #if DEBUG
     [EnableReloading]
 #endif
+
     public class Main
     {
-        public static UnityModManager.ModEntry ModEntry;
+
+
+
+
+#if WrathMod
+        public static OwlcatModification ModEntry;
+        public static Owlcat.Runtime.Core.Logging.LogChannel logger => ModEntry.Logger;
+        [OwlcatModificationEnterPoint]
+        public static void EnterPoint(OwlcatModification modEntry)
+        {
+            try
+            {
+                ModEntry = modEntry;
+                var harmony = new Harmony(modEntry.Manifest.UniqueName);
+                harmony.PatchAll(Assembly.GetExecutingAssembly());
+               // settings = ModEntry.LoadData<Settings>();
+
+                ///ModEntry.OnGUI += OnGUI;
+                //modEntry.OnDrawGUI += OnGUI;
+               // modEntry.OnGUI += OnGUI;
+                IsEnabled = true;
+                // if (!Main.haspatched)
+                {
+                    //   Main.PatchLibrary();
+                }
+            }
+            catch (Exception e)
+            {
+                ModEntry.Logger.Log(e.ToString()); ;
+                throw e;
+            }
+        }
+#endif
         public static bool IsEnabled = false;
+#if UMM
+        public static UnityModManager.ModEntry ModEntry;
         public static UnityModManager.ModEntry.ModLogger logger;
-        static bool Load(UnityModManager.ModEntry modEntry)
+
+        private static bool Load(UnityModManager.ModEntry modEntry)
         {
             try
             {
@@ -78,16 +73,20 @@ namespace FinneanTweaks
             }
             return true;
         }
-        static bool OnToggle(UnityModManager.ModEntry modEntry, bool value /* active or inactive */)
+
+        private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value /* active or inactive */)
         {
             IsEnabled = value;
             return true; // Permit or not.
         }
-        static bool Unload(UnityModManager.ModEntry modEntry)
+
+        private static bool Unload(UnityModManager.ModEntry modEntry)
         {
             new Harmony(modEntry.Info.Id).UnpatchAll(modEntry.Info.Id);
             return true;
         }
+#endif
+
 #if DEBUG
         static void OnGui(ModEntry modentry)
         {

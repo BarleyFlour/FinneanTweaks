@@ -60,6 +60,21 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UMM|AnyCPU'">
+    <OutputPath>bin\UMM\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>UMM,Release</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WrathMod|AnyCPU'">
+    <OutputPath>bin\WrathMod\</OutputPath>
+    <DefineConstants>TRACE;WrathMod</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetLoader.cs" />
     <Compile Include="BubblesSaveHooker.cs" />
@@ -75,7 +90,7 @@
       <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_public">
-      <HintPath>lib\Assembly-CSharp_public.dll</HintPath>
+      <HintPath>..\KingmakerVisualAdjustmentsMod\lib\Assembly-CSharp_public.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework">
       <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Microsoft.Build.Framework.dll</HintPath>
@@ -92,6 +107,9 @@
     </Reference>
     <Reference Include="Owlcat.Runtime.UniRx">
       <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.UniRx.dll</HintPath>
+    </Reference>
+    <Reference Include="Owlcat.Runtime.Validation">
+      <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll</HintPath>
     </Reference>
     <Reference Include="Owlcat.Runtime.Visual">
       <HintPath>F:\Games\Steam\steamapps\common\Pathfinder Second Adventure\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll</HintPath>
