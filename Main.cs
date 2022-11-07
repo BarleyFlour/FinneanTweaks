@@ -1,8 +1,12 @@
 ﻿using HarmonyLib;
 using System;
+using System.Linq;
 using UnityModManagerNet;
 using Kingmaker.Modding;
 using System.Reflection;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Cheats;
 #if UMM
 using static UnityModManagerNet.UnityModManager;
 #endif
@@ -14,10 +18,6 @@ namespace FinneanTweaks
 
     public class Main
     {
-
-
-
-
 #if WrathMod
         public static OwlcatModification ModEntry;
         public static Owlcat.Runtime.Core.Logging.LogChannel logger => ModEntry.Logger;
@@ -90,7 +90,7 @@ namespace FinneanTweaks
 #if DEBUG
         static void OnGui(ModEntry modentry)
         {
-            if(GUILayout.Button("Generate Enchant List"))
+            if(UnityEngine.GUILayout.Button("Generate Enchant List"))
             {
                 foreach(var enchantbp in Utilities.GetAllBlueprints().Entries.Where(b => b.Type == typeof(BlueprintWeaponEnchantment)).Select(a => ResourcesLibrary.TryGetBlueprint<BlueprintItemEnchantment>(a.Guid)))
                 {
