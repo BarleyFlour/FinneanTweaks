@@ -45,7 +45,7 @@ namespace FinneanTweaks
 
             public static Sprite Create(string filePath, Vector2Int size)
             {
-                Main.logger.Log("Creating sprite");
+                //Main.logger.Log("Creating sprite");
                 var bytes = File.ReadAllBytes(icons_folder + filePath);
                 var texture = new Texture2D(size.x, size.y, TextureFormat.ARGB32, false);
                 _ = texture.LoadImage(bytes);

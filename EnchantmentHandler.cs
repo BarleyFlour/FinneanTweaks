@@ -12,6 +12,8 @@ using Owlcat.Runtime.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
+using HarmonyLib;
 
 namespace FinneanTweaks
 {
@@ -138,7 +140,6 @@ namespace FinneanTweaks
         }
 
         public static Dictionary<int, string> m_EnhancementBoni;
-
         /// <summary>
         /// Removes Brilliant energy & Heartseeker and adds enchants according to settings.
         /// </summary>
@@ -146,7 +147,6 @@ namespace FinneanTweaks
         {
             try
             {
-              // Main.logger.Log("TriedAddEnchants");
                 if (finnean == null || finnean.GetType() != typeof(ItemEntityWeapon)) return;
                 string enchantmentguid = EnhancementBoni[Kingmaker.Game.Instance.Player.Chapter];
                 // Main.logger.Log("Adding Enchantments...");
@@ -239,7 +239,7 @@ namespace FinneanTweaks
         }
     }
 
-    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), "EquipItem")]
+    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), nameof(InventorySmartItemVM.EquipItem))]
     public static class EquipItem_Patch
     {
         public static void Postfix(InventorySmartItemVM __instance, ItemEntity item)
@@ -249,7 +249,7 @@ namespace FinneanTweaks
         }
     }
 
-    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), "EquipItemInSlot")]
+    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), nameof(InventorySmartItemVM.EquipItemInSlot))]
     public static class EquipItemInSlot_Patch
     {
         public static void Postfix(InventorySmartItemVM __instance, ItemEntity item)
@@ -259,7 +259,7 @@ namespace FinneanTweaks
         }
     }
 
-    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), "RefreshData")]
+    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), nameof(InventorySmartItemVM.RefreshData))]
     public static class RefreshData_Patch
     {
         public static void Postfix(InventorySmartItemVM __instance)
@@ -268,7 +268,7 @@ namespace FinneanTweaks
         }
     }
 
-    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), "SelectItem", new Type[] { typeof(int) })]
+    [HarmonyLib.HarmonyPatch(typeof(InventorySmartItemVM), nameof(InventorySmartItemVM.SelectItem), new Type[] { typeof(int) })]
     public static class SelectItem_Patch
     {
         public static void Postfix(InventorySmartItemVM __instance)
@@ -276,162 +276,73 @@ namespace FinneanTweaks
             __instance.RefreshFinneanItems();
         }
     }
-
     [HarmonyLib.HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.ContainsEnchantmentFromBlueprint))]
-    public static class ContainsEnchantmentFromBlueprint_patch
+    public static class ContainsEnchantmentFromBlueprint_patcher
     {
-        public static void Postfix(ItemEntity __instance, ref bool __result, BlueprintItemEnchantment enchantment)
+        static bool ShouldReturnFalse(BlueprintItemEnchantment enchantment)
         {
-            try
-            {
-                //This is dirty but __instance seems to always be null so cant check that its finnean.
-                if (enchantment.AssetGuidThreadSafe ==
-                    "66e9e299c9002ea4bb65b6f300e43770") //if (__instance != null && __instance.Blueprint != null && __instance.Blueprint.NameForAcronym.Contains("Finnean"))
-                {
-                    __result = true;
-                }
-            }
-            catch (Exception e)
-            {
-                Main.logger.Error(e.ToString());
-            }
+            if (enchantment.AssetGuidThreadSafe == "66e9e299c9002ea4bb65b6f300e43770")
+                return true;
+            return false;
         }
-
-        public static void Prefix(ItemEntity __instance, ref bool __result, BlueprintItemEnchantment enchantment)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {
             try
             {
-                if (__instance == null)
+                var code = new List<CodeInstruction>(instructions);
                 {
-                    Main.logger.Log("EnchantMentContainsNull");
+                    int insertionIndex = -1;
+                    Label SkipToHere = il.DefineLabel();
+                    for (int i = 0; i < code.Count - 1; i++)
+                    {
+                        if (code[i].opcode == OpCodes.Ldloc_2 && code[i + 1].opcode == OpCodes.Ret)
+                        {
+                            code[i].labels.Add(SkipToHere);
+#if DEBUG
+                            Main.logger.Log($"Inserted Label at index: {i}");
+#endif
+                            break;
+                        }
+                    }
+                    var instructionsToInsert = new List<CodeInstruction>();
+                    {
+                        instructionsToInsert.Add(new CodeInstruction(OpCodes.Ldarg_1));
+                        instructionsToInsert.Add(new CodeInstruction(OpCodes.Callvirt,
+                            AccessTools.Method(typeof(ContainsEnchantmentFromBlueprint_patcher),
+                                nameof(ContainsEnchantmentFromBlueprint_patcher.ShouldReturnFalse))));
+                        instructionsToInsert.Add(new CodeInstruction(OpCodes.Brtrue_S, SkipToHere));
+                    }
+#if DEBUG
+                        Main.logger.Log($"Inserted IL Code at index: {0}");
+#endif
+                        code.InsertRange(0, instructionsToInsert);
                 }
-                else
-                {
-                    Main.logger.Log("not null " + __instance.ToString());
-                }
+                return code;
             }
             catch (Exception e)
             {
                 Main.logger.Error(e.ToString());
+                throw e;
             }
         }
     }
-
     [HarmonyLib.HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.ApplyEnchantments))]
     public static class ApplyEnchantments_patch
     {
-        /*public static void Postfix(ItemEntity __instance)
-        {
-            Main.logger.Log("dgsdsg");
-        }*/
         public static void Postfix(ItemEntity __instance, bool onInitializeOrEquip)
         {
             try
             {
-                //Main.logger.Log("dssadafs");
                 if (!__instance.Blueprint.NameForAcronym.Contains("Finnean")) return;
                 else
                 {
                     FinneanEnchantmentHandler.AddEnchantments(__instance);
                     return;
                 }
-
-                /*if (!__instance.InstantiateEnchantments)
-                {
-                    return false;
-                }*/
-                ItemEnchantmentCollection itemEnchantmentCollection = __instance.m_Enchantments =
-                    __instance.Facts.EnsureFactProcessor<ItemEnchantmentCollection>();
-                List<ItemEnchantment> list = null;
-                List<BlueprintItemEnchantment> list2 = null;
-                if (!onInitializeOrEquip)
-                {
-                    foreach (ItemEnchantment itemEnchantment in itemEnchantmentCollection.RawFacts)
-                    {
-                        if (itemEnchantment.ParentContext == null &&
-                            !__instance.Blueprint.Enchantments.HasItem(itemEnchantment.Blueprint))
-                        {
-                            list = (list ?? ListPool<ItemEnchantment>.Claim(5));
-                            list.Add(itemEnchantment);
-                            LogChannel @default = PFLog.Default;
-                            ICanBeLogContext blueprint = __instance.Blueprint;
-                            string format = "{0}: remove redunant enchantment '{1}' (owner: {2})";
-                            object arg = itemEnchantment;
-                            UnitDescriptor arg2;
-                            if ((arg2 = __instance.Owner) == null)
-                            {
-                                ItemsCollection collection = __instance.Collection;
-                                arg2 = ((collection != null) ? collection.OwnerUnit : null);
-                            }
-
-                            @default.Warning(blueprint, string.Format(format, __instance, arg, arg2),
-                                Array.Empty<object>());
-                        }
-                    }
-                }
-
-                foreach (BlueprintItemEnchantment blueprintItemEnchantment in __instance.Blueprint.Enchantments)
-                {
-                    if (blueprintItemEnchantment.AssetGuidThreadSafe != "66e9e299c9002ea4bb65b6f300e43770" &&
-                        !ItemEntity.ContainsEnchantmentFromBlueprint(itemEnchantmentCollection,
-                            blueprintItemEnchantment))
-                    {
-                        list2 = (list2 ?? ListPool<BlueprintItemEnchantment>.Claim(5));
-                        list2.Add(blueprintItemEnchantment);
-                        if (!onInitializeOrEquip)
-                        {
-                            LogChannel default2 = PFLog.Default;
-                            ICanBeLogContext blueprint2 = __instance.Blueprint;
-                            string format2 = "{0}: restore missing enchantment '{1}' (owner: {2})";
-                            object arg3 = blueprintItemEnchantment;
-                            UnitDescriptor arg4;
-                            if ((arg4 = __instance.Owner) == null)
-                            {
-                                ItemsCollection collection2 = __instance.Collection;
-                                arg4 = ((collection2 != null) ? collection2.OwnerUnit : null);
-                            }
-
-                            default2.Warning(blueprint2, string.Format(format2, __instance, arg3, arg4),
-                                Array.Empty<object>());
-                        }
-                    }
-                }
-
-                if (list != null)
-                {
-                    foreach (ItemEnchantment fact in list)
-                    {
-                        itemEnchantmentCollection.RemoveFact(fact);
-                    }
-                }
-
-                if (list2 != null)
-                {
-                    using (ContextData<ItemEntity.BuiltInEnchantmentFlag>.Request())
-                    {
-                        foreach (BlueprintItemEnchantment blueprint3 in list2)
-                        {
-                            __instance.AddEnchantmentInternal(blueprint3, null, null);
-                        }
-                    }
-                }
-
-                if (list != null)
-                {
-                    ListPool<ItemEnchantment>.Release(list);
-                }
-
-                if (list2 != null)
-                {
-                    ListPool<BlueprintItemEnchantment>.Release(list2);
-                }
-
-               // return false;
             }
             catch (Exception e)
             {
                 Main.logger.Error(e.ToString());
-                //return true;
             }
         }
     }

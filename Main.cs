@@ -12,7 +12,7 @@ using static UnityModManagerNet.UnityModManager;
 #endif
 namespace FinneanTweaks
 {
-#if DEBUG
+#if FALSE
     [EnableReloading]
 #endif
 
@@ -60,7 +60,7 @@ namespace FinneanTweaks
                 logger = modEntry.Logger;
                 var harmony = new Harmony(modEntry.Info.Id);
                 harmony.PatchAll();
-#if DEBUG
+#if FALSE
                 modEntry.OnGUI = OnGui;
 #endif
                 modEntry.OnUnload = Unload;
@@ -87,7 +87,7 @@ namespace FinneanTweaks
         }
 #endif
 
-#if DEBUG
+#if FALSE
         static void OnGui(ModEntry modentry)
         {
             if(UnityEngine.GUILayout.Button("Generate Enchant List"))

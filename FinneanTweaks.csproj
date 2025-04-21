@@ -7,6 +7,7 @@
     <InstallDir Condition=" '$(InstallDir)' == '' ">$(WrathPath)</InstallDir>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <Target Name="Publicise" AfterTargets="Clean">
     <ItemGroup>
@@ -22,7 +23,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FinneanTweaks</RootNamespace>
     <AssemblyName>FinneanTweaks</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
