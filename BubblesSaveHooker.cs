@@ -4,6 +4,7 @@ using Kingmaker.EntitySystem.Persistence;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using Kingmaker.UI.MVVM._VM.MainMenu;
 
 namespace FinneanTweaks
 {
@@ -85,6 +86,16 @@ namespace FinneanTweaks
             {
                 Main.logger.Error(e.ToString());
             }
+        }
+    }
+    [HarmonyPatch(typeof(MainMenuVM), nameof(MainMenuVM.EnterNewGame))]
+    internal static class OnNewGame
+    {
+        [HarmonyPostfix]
+        internal static void Postfix()
+        {
+            Main.logger.Log("New game started.");
+            FinneanSettings.Instance = new();
         }
     }
 
