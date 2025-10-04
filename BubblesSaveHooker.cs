@@ -94,7 +94,6 @@ namespace FinneanTweaks
         [HarmonyPostfix]
         internal static void Postfix()
         {
-            Main.logger.Log("New game started.");
             FinneanSettings.Instance = new();
         }
     }
